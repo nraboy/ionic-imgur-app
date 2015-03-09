@@ -1,5 +1,6 @@
 <ion-view title="Viral Stream" ng-init="viral()">
     <ion-content>
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="viral(true)"></ion-refresher>
         <div class="row" ng-repeat="image in images.data | limitTo: 100" ng-if="$index % 4 === 0">
             <div class="col col-25" ng-if="$index < images.data.length">
                 <img ng-if="!images.data[$index].is_album" ng-src="http://i.imgur.com/{{images.data[$index].id}}b.gif" width="100%" />
