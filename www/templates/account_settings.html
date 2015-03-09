@@ -1,0 +1,54 @@
+<ion-view title="Settings">
+    <ion-content>
+        <div class="list">
+            <div class="item item-divider">
+                Account
+            </div>
+            <div class="item item-toggle">
+                High Quality Images
+                <label class="toggle toggle-balanced">
+                    <input type="checkbox" ng-model="highQualityImages">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </div>
+            <div class="item item-toggle">
+                Public Images
+                <label class="toggle toggle-balanced">
+                    <input type="checkbox" ng-model="publicImages">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </div>
+            <div class="item item-toggle">
+                Messaging Enabled
+                <label class="toggle toggle-balanced">
+                    <input type="checkbox" ng-model="messagingEnabled">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </div>
+            <div class="item item-divider">
+                About
+            </div>
+            <div class="item">
+                Imgur
+            </div>
+            <div class="item">
+                Version 0.0.1
+            </div>
+            <div class="item item-divider">
+                Get Social
+            </div>
+            <a class="item" ng-click="">
+                Share on Twitter
+            </a>
+            <a class="item" ng-click="">
+                Share on Facebook
+            </a>
+        </div>
+    </ion-content>
+</ion-view>
