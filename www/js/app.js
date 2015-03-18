@@ -11,7 +11,7 @@ imgurApp.run(function($ionicPlatform, $imgur, $state) {
         }
         if(!window.cordova) {
             imgurInstance = new $imgur("IMGUR_ACCESS_TOKEN_FOR_WEB_ONLY");
-            $state.go("secure.imgur.tabs");
+            $state.go("secure.tabs.viral");
         }
     });
 });
@@ -25,10 +25,12 @@ imgurApp.config(function($stateProvider, $urlRouterProvider) {
         })
         .state("secure", {
             url: "/secure",
-            templateUrl: "templates/secure.html"
+            templateUrl: "templates/secure.html",
+            abstract: true
         })
-        .state("secure.imgur", {
+        .state("secure.tabs", {
             url: "/imgur",
+            abstract: true,
             views: {
                 "secure-content": {
                     templateUrl: "templates/imgur_tabs.html",
@@ -44,17 +46,27 @@ imgurApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        .state("secure.imgur.tabs", {
-            url: "/tabs",
+        .state("secure.tabs.viral", {
+            url: "/viral",
             views: {
                 "viral": {
                     templateUrl: "templates/tabs_viral.html",
                     controller: "TabsController"
-                },
+                }
+            }
+        })
+        .state("secure.tabs.me", {
+            url: "/me",
+            views: {
                 "me": {
                     templateUrl: "templates/tabs_me.html",
                     controller: "TabsController"
-                },
+                }
+            }
+        })
+        .state("secure.tabs.messages", {
+            url: "/messages",
+            views: {
                 "messages": {
                     templateUrl: "templates/tabs_messages.html",
                     controller: "TabsController"
@@ -75,7 +87,7 @@ imgurApp.controller("LoginController", function($scope, $state, $ionicHistory, $
         $cordovaOauth.imgur("319aaa6d9162af7").then(function(result) {
             console.log(JSON.stringify(result));
             imgurInstance = new $imgur(result.access_token);
-            $state.go("secure.imgur.tabs");
+            $state.go("secure.tabs.viral");
         }, function(error) {
             console.log(error);
         });
