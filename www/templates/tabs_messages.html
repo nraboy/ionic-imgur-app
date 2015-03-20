@@ -1,5 +1,18 @@
-<ion-view title="Messages">
-    <ion-content>
-        Messages
+<ion-view title="Messages" ng-init="messages()">
+    <ion-nav-buttons side="right">
+        <button class="button button-icon icon ion-plus"></button>
+    </ion-nav-buttons>
+    <ion-content class="center-vertical">
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="messages(true)"></ion-refresher>
+        <div class="row" style="margin-top: 100px; text-align: center" ng-if="conversations.data.length === undefined || conversations.data.length <= 0">
+            <div class="col">
+                You have no messages...
+            </div>
+        </div>
+        <ion-list ng-if="conversations.data.length > 0">
+            <ion-item ng-repeat="conversation in conversations.data">
+                {{conversation.last_message_preview}}
+            </ion-item>
+        </ion-list>
     </ion-content>
 </ion-view>
