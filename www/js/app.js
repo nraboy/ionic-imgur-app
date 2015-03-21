@@ -9,19 +9,6 @@ imgurApp.run(function($ionicPlatform, $imgur, $state, $localStorage) {
         if(window.StatusBar) {
             StatusBar.styleDefault();
         }
-        if(!window.cordova) {
-            $localStorage.imgur = {
-                oauth: {
-                    access_token: "IMGUR_ACCESS_TOKEN_FOR_WEB_ONLY",
-                    account_username: "nraboy"
-                }
-            };
-            imgurInstance = new $imgur($localStorage.imgur.oauth.access_token);
-            $state.go("secure.tabs.viral");
-        } else if($localStorage.imgur !== undefined && (new Date).getTime() < $localStorage.imgur.oauth.expires_at) {
-            imgurInstance = new $imgur($localStorage.imgur.oauth.access_token);
-            $state.go("secure.tabs.viral");
-        }
     });
 });
 
@@ -30,7 +17,7 @@ imgurApp.config(function($stateProvider, $urlRouterProvider) {
         .state("login", {
             url: "/login",
             templateUrl: "templates/login.html",
-            controller: "LoginController"
+            controller: "LoginController",
         })
         .state("secure", {
             url: "/secure",
@@ -88,10 +75,26 @@ imgurApp.config(function($stateProvider, $urlRouterProvider) {
 
 imgurApp.controller("LoginController", function($scope, $state, $ionicHistory, $localStorage, $cordovaOauth, $imgur) {
 
+    $ionicHistory.clearHistory();
+
     $ionicHistory.nextViewOptions({
         disableAnimate: true,
         disableBack: true
     });
+
+    if(!window.cordova) {
+        $localStorage.imgur = {
+            oauth: {
+                access_token: "IMGUR_ACCESS_TOKEN_FOR_WEB_ONLY",
+                account_username: "nraboy"
+            }
+        };
+        imgurInstance = new $imgur($localStorage.imgur.oauth.access_token);
+        $state.go("secure.tabs.viral");
+    } else if($localStorage.imgur !== undefined && (new Date).getTime() < $localStorage.imgur.oauth.expires_at) {
+        imgurInstance = new $imgur($localStorage.imgur.oauth.access_token);
+        $state.go("secure.tabs.viral");
+    }
 
     $scope.login = function() {
         $cordovaOauth.imgur("319aaa6d9162af7").then(function(result) {
