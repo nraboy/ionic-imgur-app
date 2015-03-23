@@ -9,6 +9,19 @@ imgurApp.run(function($ionicPlatform, $imgur, $state, $localStorage) {
         if(window.StatusBar) {
             StatusBar.styleDefault();
         }
+        if(!window.cordova) {
+            $localStorage.imgur = {
+                oauth: {
+                    access_token: "IMGUR_ACCESS_TOKEN_FOR_WEB_ONLY",
+                    account_username: "nraboy"
+                }
+            };
+            imgurInstance = new $imgur($localStorage.imgur.oauth.access_token);
+            $state.go("secure.tabs.viral");
+        } else if($localStorage.imgur !== undefined && (new Date).getTime() < $localStorage.imgur.oauth.expires_at) {
+            imgurInstance = new $imgur($localStorage.imgur.oauth.access_token);
+            $state.go("secure.tabs.viral");
+        }
     });
 });
 
@@ -32,6 +45,15 @@ imgurApp.config(function($stateProvider, $urlRouterProvider) {
                 "secure-content": {
                     templateUrl: "templates/imgur_tabs.html",
                     controller: "ImgurController"
+                }
+            }
+        })
+        .state("secure.image", {
+            url: "/image/:imageId",
+            views: {
+                "secure-content": {
+                    templateUrl: "templates/image.html",
+                    controller: "ImageController"
                 }
             }
         })
@@ -82,20 +104,6 @@ imgurApp.controller("LoginController", function($scope, $state, $ionicHistory, $
         disableBack: true
     });
 
-    if(!window.cordova) {
-        $localStorage.imgur = {
-            oauth: {
-                access_token: "IMGUR_ACCESS_TOKEN_FOR_WEB_ONLY",
-                account_username: "nraboy"
-            }
-        };
-        imgurInstance = new $imgur($localStorage.imgur.oauth.access_token);
-        $state.go("secure.tabs.viral");
-    } else if($localStorage.imgur !== undefined && (new Date).getTime() < $localStorage.imgur.oauth.expires_at) {
-        imgurInstance = new $imgur($localStorage.imgur.oauth.access_token);
-        $state.go("secure.tabs.viral");
-    }
-
     $scope.login = function() {
         $cordovaOauth.imgur("319aaa6d9162af7").then(function(result) {
             console.log(JSON.stringify(result));
@@ -103,7 +111,6 @@ imgurApp.controller("LoginController", function($scope, $state, $ionicHistory, $
             $localStorage.imgur = {
                 oauth: result
             };
-            console.log("JUST SIGNED IN " + JSON.stringify($localStorage.imgur));
             imgurInstance = new $imgur(result.access_token);
             $state.go("secure.tabs.viral");
         }, function(error) {
@@ -157,6 +164,12 @@ imgurApp.controller("ImgurController", function($scope, $ionicLoading, $cordovaC
             console.error(error);
         });
     }
+
+});
+
+imgurApp.controller("ImageController", function($scope, $stateParams) {
+
+    $scope.imageId = $stateParams.imageId;
 
 });
 
